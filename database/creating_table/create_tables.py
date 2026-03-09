@@ -1,14 +1,7 @@
 import sqlite3
-from pathlib import Path
+from config import DB_PATH
 
-# project root
-ROOT_DIR = Path(__file__).resolve().parents[2]
-
-# db file name
-db_file = ROOT_DIR / "smart_campus.sqlite"
-
-# Create the connection
-conn = sqlite3.connect(db_file)
+conn = sqlite3.connect(DB_PATH)
 cursor = conn.cursor()
 
 # -------------------------

@@ -1,6 +1,15 @@
 # Ignore the .env file (contains sensitive environment variables)
 .env
 
+# IDE files
+.idea/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
 # SQLite databases
 *.sqlite
 *.sqlite3
