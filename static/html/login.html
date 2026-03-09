@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login - Elad Campus</title>
+  <link rel="stylesheet" href="/static/css/auth.css">
+</head>
+
+<body>
+
+<div class="auth-container">
+
+  <img src="/static/images/elad_logo.jpg" class="logo">
+
+  <h1 class="campus-title">Elad Campus</h1>
+  <p class="subtitle">Student Information System</p>
+
+  <h2>Login</h2>
+
+  {% if error %}
+    <div class="error">{{ error }}</div>
+  {% endif %}
+
+  <form method="post">
+    <input type="text" name="username" placeholder="Username" required>
+    <input type="email" name="email" placeholder="Email" required>
+    <button type="submit">Login</button>
+  </form>
+
+</div>
+
+</body>
+</html>
