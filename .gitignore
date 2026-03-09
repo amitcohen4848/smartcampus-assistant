@@ -1,0 +1,11 @@
+# Ignore the .env file (contains sensitive environment variables)
+.env
+
+# SQLite databases
+*.sqlite
+*.sqlite3
+*_showyourwork.sqlite
+
+# Ignore common database dump files (optional)
+*.sql
+*.dump
