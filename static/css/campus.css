@@ -1,0 +1,55 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #1f1f1f;
+    color: #e0e0e0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 100vh;
+}
+
+.container {
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 10px;
+}
+
+.welcome {
+    color: #aaa;
+    margin-bottom: 40px;
+}
+
+.menu {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.card {
+    background: #333;
+    padding: 20px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+
+    transition: background 0.2s;
+}
+
+.card:hover {
+    background: #555;
+}
+
+.logout {
+    margin-top: 40px;
+}
+
+.logout a {
+    color: #aaa;
+    text-decoration: none;
+}

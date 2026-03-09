@@ -5,7 +5,7 @@ def get_user_id(username: str, email: str) -> int | None:
         cursor = conn.cursor()
 
         sql_query = """
-        SELECT student_id
+        SELECT student_id, role
         FROM student
         WHERE username = ? AND email = ?
         """
@@ -14,6 +14,6 @@ def get_user_id(username: str, email: str) -> int | None:
         row = cursor.fetchone()
 
         if row:
-            return row["student_id"]
+            return row["student_id"],row["role"]
 
         return None

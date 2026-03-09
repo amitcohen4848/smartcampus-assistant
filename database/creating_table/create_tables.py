@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS lecturer (
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS course (
     course_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    course_code TEXT UNIQUE NOT NULL,
     course_name TEXT NOT NULL,
     lecture_hours TEXT NOT NULL,
     class_room TEXT NOT NULL DEFAULT 'distance learning',

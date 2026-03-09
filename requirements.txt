@@ -4,3 +4,4 @@ openai
 python-dotenv
 Jinja2
 itsdangerous
+python-multipart

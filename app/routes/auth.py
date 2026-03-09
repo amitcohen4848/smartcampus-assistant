@@ -1,24 +1,33 @@
 from fastapi import APIRouter, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-from database.db import get_connection
-
+from crud.user_query import get_user_id
 
 router = APIRouter()
 templates = Jinja2Templates(directory="static/html")
+
+
 @router.get("/login", response_class=HTMLResponse)
 def login_page(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
-@router.post("/login", response_class=HTMLResponse)
-def login(request: Request,
-          username: str = Form(...)):
 
-    user = get_user_by_username(username)
+@router.post("/login")
+def login(
+    request: Request,
+    username: str = Form(...),
+    email: str = Form(...)
+):
+    user = get_user_id(username, email)
 
     if user:
-        request.session["user_id"] = user.id
-        return RedirectResponse(url="/welovemath", status_code=303)
+        # since query can return None better unpacking it here:
+        user_id, user_role = user
+
+        request.session["user_id"] = user_id
+        request.session["user_role"] = user_role
+
+        return RedirectResponse("/eladcampus", status_code=303)
 
     return templates.TemplateResponse(
         "login.html",
