@@ -1,5 +1,5 @@
 import re
-from constants_utils.cons_utils import COURSES
+from constants_utils.cons_utils import COURSES, WARNING_WORDS
 
 def extract_course(question: str):
 
@@ -21,3 +21,12 @@ def data_filter(question: str):
         return None
 
     return question.strip()
+
+def contains_warning(sentence: str):
+    sentence = sentence.lower()
+
+    for group in WARNING_WORDS:
+        if all(word in sentence for word in group):
+            return True
+
+    return False

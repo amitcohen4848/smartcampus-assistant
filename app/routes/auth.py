@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-from crud.user_query import get_user_id
+from crud.user_crud import get_user_id
 
 router = APIRouter()
 templates = Jinja2Templates(directory="static/html")

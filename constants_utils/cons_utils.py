@@ -7,7 +7,7 @@ with get_connection() as conn:
 
     sql_query = """
     SELECT course_name
-    FROM courses
+    FROM course
     """
 
     cur.execute(sql_query)
@@ -26,3 +26,25 @@ VALID_INTENTS = {
     "course_description",
     "unknown"
 }
+
+WARNING_WORDS = [
+    ("ignore", "previous"),
+    ("ignore", "instructions"),
+    ("disregard", "instructions"),
+    ("forget", "previous"),
+    ("override", "instructions"),
+    ("new", "instructions"),
+    ("follow", "my", "instructions"),
+    ("system", "prompt"),
+    ("show", "system"),
+    ("reveal", "prompt"),
+    ("display", "instructions"),
+    ("what", "are", "your", "instructions"),
+    ("act", "as"),
+    ("pretend", "to"),
+    ("you", "are", "now"),
+    ("drop", "table"),
+    ("delete", "database"),
+    ("remove", "database"),
+
+]

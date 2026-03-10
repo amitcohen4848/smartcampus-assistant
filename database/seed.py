@@ -111,3 +111,4 @@ conn.commit()
 conn.close()
 
 print("Seed data inserted successfully.")
+print("DB PATH:", DB_PATH)

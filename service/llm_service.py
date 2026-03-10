@@ -41,12 +41,34 @@ def classify_question(question: str):
     return response.output_text.strip()
 
 
-def llm_answer(question: str):
+def llm_answer(question: str, data: str, intent: str):
 
     try:
+        prompt = f"""
+        You are a SmartCampus assistant.
+
+        The student's question:
+        {question}
+
+        Detected intent:
+        {intent}
+
+        Database result:
+        {data}
+
+        Important rules:
+        - The database result contains the correct information.
+        - Use it directly to answer the student.
+        - If the message asks for missing information (for example "Please specify the course name"), politely ask the student for that information.
+        - If the result is not empty, assume the student IS enrolled in those courses.
+        - Do NOT contradict the database result.
+        - If the result is empty say: "No information was found."
+
+        Write a short helpful answer.
+        """
         response = client.responses.create(
             model="gpt-4.1-mini",
-            input=question
+            input=prompt
         )
 
         return response.output_text.strip()
