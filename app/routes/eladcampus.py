@@ -9,6 +9,6 @@ templates = Jinja2Templates(directory="static/html")
 @router.get("/eladcampus")
 def campus_home(request: Request, user_id = Depends(require_login)):
     return templates.TemplateResponse(
-        "eladcampus.html",
+        "elad_campus.html",
         {"request": request, "user_id": user_id}
     )

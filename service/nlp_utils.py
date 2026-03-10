@@ -1,17 +1,12 @@
 import re
-
+from constants_utils.cons_utils import COURSES
 
 def extract_course(question: str):
 
-    courses = [
-        "Linear Algebra",
-        "Python for beginners",
-        "English",
-        "Math"
-    ]
+    question = question.lower()
 
-    for course in courses:
-        if course.lower() in question.lower():
+    for course in COURSES:
+        if course in question:
             return course
 
     return None

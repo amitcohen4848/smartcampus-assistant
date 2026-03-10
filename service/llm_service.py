@@ -1,10 +1,11 @@
-import os
-from openai import OpenAI
+from openai import OpenAI, RateLimitError
+from config import OPENAI_API_KEY
+import logging
 
-# Get key for llm
-client = OpenAI(
-    api_key=os.getenv("OPENAI_API_KEY")
-)
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
+
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 def classify_question(question: str):
     SYSTEM_PROMPT = """
@@ -42,9 +43,14 @@ def classify_question(question: str):
 
 def llm_answer(question: str):
 
-    response = client.responses.create(
-        model="gpt-4.1-mini",
-        input=question
-    )
+    try:
+        response = client.responses.create(
+            model="gpt-4.1-mini",
+            input=question
+        )
 
-    return response.output_text
+        return response.output_text.strip()
+
+    except RateLimitError:
+
+        logger.error(f"API reached it limit.")
