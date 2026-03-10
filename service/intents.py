@@ -59,5 +59,12 @@ def choose_query(intent, course, user_id):
             return "No description for this course."
 
         return result
+
+    elif intent == "technical_support":
+        return  (
+            "This seems to be a technical issue. "
+            "Please contact the SmartCampus IT support or your campus help desk for assistance."
+            )
+
     else:
         return "I cannot answer that question."

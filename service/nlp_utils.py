@@ -22,6 +22,7 @@ def data_filter(question: str):
 
     return question.strip()
 
+
 def contains_warning(sentence: str):
     sentence = sentence.lower()
 

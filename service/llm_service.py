@@ -14,7 +14,8 @@ def classify_question(question: str):
     Your task is ONLY to classify the student's question.
 
     Allowed intents:
-
+    
+    technical_support
     student_courses
     course_lecturer
     course_name
