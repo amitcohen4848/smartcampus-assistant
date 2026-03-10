@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS student_course (
     student_course_id INTEGER PRIMARY KEY AUTOINCREMENT,
     student_id INTEGER NOT NULL,
     course_id INTEGER NOT NULL,
-
+    UNIQUE(student_id, course_id),
     FOREIGN KEY (student_id) REFERENCES student(student_id),
     FOREIGN KEY (course_id) REFERENCES course(course_id))
 """)
