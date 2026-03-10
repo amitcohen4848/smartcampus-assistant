@@ -6,6 +6,7 @@ from service.llm_service import classify_question, llm_answer
 from service.nlp_utils import extract_course, data_filter, contains_warning
 from service.intents import choose_query
 from constants_utils.cons_utils import VALID_INTENTS
+from crud.questions_crud import save_question
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +37,7 @@ def ask_ai(
     else:
         word_count = len(filtered.split())
 
-        if word_count < 4:
+        if word_count < 3:
             answer = "Your question is too short. Please be more specific."
 
         elif word_count > 20:
@@ -47,6 +48,9 @@ def ask_ai(
             answer = "Your question cannot be processed. Please rephrase it."
 
         else:
+
+            previous_intent = request.session.get("last_intent")
+
             intent = classify_question(filtered)
 
             if intent not in VALID_INTENTS:
@@ -54,19 +58,74 @@ def ask_ai(
 
             course = extract_course(filtered)
 
+            # recover intent when user just clarifies course name
+            if intent == "course_name" and course:
+                if previous_intent in {
+                    "course_classroom",
+                    "course_time",
+                    "course_lecturer",
+                    "course_description"
+                }:
+                    intent = previous_intent
+
+            # store corrected intent
+            request.session["last_intent"] = intent
+
             logger.info(f"Question: {question}")
             logger.info(f"Intent: {intent}")
-            logger.info(f"Course: {course}")
+            logger.info(f"Course extracted: {course}")
 
+            # -----------------------------
+            # Recover course context
+            # -----------------------------
+            courses_context = request.session.get("last_courses")
+
+            if not course and courses_context:
+
+                if len(courses_context) == 1:
+                    course = courses_context[0]
+
+                elif len(courses_context) > 1:
+                    options = ", ".join(courses_context)
+
+                    return templates.TemplateResponse(
+                        "ask.html",
+                        {
+                            "request": request,
+                            "answer": f"You are enrolled in multiple courses: {options}. Which course do you mean?",
+                            "question": question
+                        }
+                    )
+
+            # -----------------------------
+            # Run SQL query
+            # -----------------------------
             result = choose_query(intent, course, user_id)
 
+            # -----------------------------
+            # Store context
+            # -----------------------------
+            if intent == "student_courses" and result:
+                request.session["last_courses"] = result
+
+            elif course:
+                request.session["last_courses"] = [course]
+
+            # -----------------------------
             # Format result for LLM
+            # -----------------------------
             if isinstance(result, list):
                 result = ", ".join(result) if len(result) > 1 else result[0]
 
             logger.info(f"Query result: {result}")
 
             answer = llm_answer(question, result, intent)
+
+            # -----------------------------
+            # Store successful Q&A
+            # -----------------------------
+            if intent != "unknown":
+                save_question(user_id, question, answer)
 
     return templates.TemplateResponse(
         "ask.html",
