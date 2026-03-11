@@ -17,6 +17,7 @@ from app.routes.course_route import router as course_router
 from app.routes.auth import router as auth_router
 from app.routes.eladcampus import router as eladcampus_router
 from app.routes.question_route import router as question_router
+from app.routes.update_course import router as update_course_router
 
 
 # ===============================
@@ -117,3 +118,4 @@ app.include_router(student_router)
 app.include_router(course_router)
 app.include_router(eladcampus_router)
 app.include_router(question_router)
+app.include_router(update_course_router)

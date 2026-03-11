@@ -1,19 +1,34 @@
 from database.db import get_connection
 
-def get_user_id(username: str, email: str) -> int | None:
+
+def get_user_id(username, email):
+
     with get_connection() as conn:
         cursor = conn.cursor()
 
-        sql_query = """
+        # check student
+        cursor.execute("""
         SELECT student_id, role
         FROM student
-        WHERE username = ? AND email = ?
-        """
+        WHERE username=? AND email=?
+        """, (username, email))
 
-        cursor.execute(sql_query, (username, email))
-        row = cursor.fetchone()
+        student = cursor.fetchone()
 
-        if row:
-            return row["student_id"],row["role"]
+        if student:
+            return student
 
-        return None
+
+        # check lecturer
+        cursor.execute("""
+        SELECT lecturer_id, role
+        FROM lecturer
+        WHERE username=? AND email=?
+        """, (username, email))
+
+        lecturer = cursor.fetchone()
+
+        if lecturer:
+            return lecturer
+
+    return None
