@@ -24,7 +24,8 @@ VALID_INTENTS = {
     "course_time",
     "course_classroom",
     "course_description",
-    "unknown"
+    "unknown",
+    "technical_support"
 }
 
 WARNING_WORDS = [

@@ -12,14 +12,19 @@ def extract_course(text):
     logger.info(f"Extractor input: {text}")
     logger.info(f"Available courses: {COURSES}")
 
-    # First try fuzzy match
+    CONTEXT_WORDS = ["this course", "that course", "this class", "it"]
+
+    for w in CONTEXT_WORDS:
+        if w in text:
+            logger.info("Context reference detected, skipping extraction")
+            return None
+
     match = process.extractOne(text, COURSES, score_cutoff=60)
 
     if match:
         logger.info(f"Fuzzy match: {match}")
         return match[0]
 
-    # Second attempt: keyword search
     for course in COURSES:
         words = course.split()
 

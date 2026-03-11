@@ -6,7 +6,7 @@ router = APIRouter()
 
 
 # Route To get students
-@router.get("/students")
+@router.get("/debug/students")
 def get_students(db = Depends(get_db)):
     cursor = db.execute("SELECT * FROM student")
     rows = cursor.fetchall()
