@@ -115,7 +115,14 @@ def ask_ai(
                         }
                     )
 
+            # loggers before query
+            logger.info(f"Intent before query: {intent}")
+            logger.info(f"Course before query: {course}")
+            logger.info(f"Courses context: {courses_context}")
+
             result = choose_query(intent, course, user_id)
+
+            # logger to query
             logger.info(f"Query result: {result}")
 
 
