@@ -1,8 +1,11 @@
+import logging
 import queries.llm_queries as ql
+
+logger = logging.getLogger(__name__)
+
 
 def choose_query(intent, course, user_id):
 
-    # intents that require a course name
     course_required = [
         "course_time",
         "course_classroom",
@@ -13,58 +16,70 @@ def choose_query(intent, course, user_id):
     if intent in course_required and not course:
         return "Please specify the course name."
 
-    if intent == "student_courses":
-        # query student_courses db
-        result = ql.get_student_courses(user_id)
+    try:
 
-        if not result:
-            return "No student courses found."
+        if intent == "student_courses":
 
-        return result
+            result = ql.get_student_courses(user_id)
 
+            if not result:
+                return "No student courses found."
 
-    elif intent == "course_time":
-        # query course DB
-        result = ql.get_course_time(course)
-
-        if not result:
-            return "No time for this course found."
-
-        return result
-
-    elif intent == "course_classroom":
-        # query course DB
-        result = ql.get_course_classroom(course)
-
-        if not result:
-            return "No classroom found for this course."
-
-        return result
+            return result
 
 
-    elif intent == "course_lecturer":
-        # query course DB
-        result = ql.get_course_lecturer(course)
+        elif intent == "course_time":
 
-        if not result:
-            return "No lecturer for this course found."
+            result = ql.get_course_time(course)
 
-        return result
+            if not result:
+                return "No time for this course found."
 
-    elif intent == "course_description":
-        # query course DB
-        result = ql.get_course_description(course)
+            return result
 
-        if not result:
-            return "No description for this course."
 
-        return result
+        elif intent == "course_classroom":
 
-    elif intent == "technical_support":
-        return  (
+            result = ql.get_course_classroom(course)
+
+            if not result:
+                return "No classroom found for this course."
+
+            return result
+
+
+        elif intent == "course_lecturer":
+
+            result = ql.get_course_lecturer(course)
+
+            if not result:
+                return "No lecturer for this course found."
+
+            return result
+
+
+        elif intent == "course_description":
+
+            result = ql.get_course_description(course)
+
+            if not result:
+                return "No description for this course."
+
+            return result
+
+
+    except Exception as e:
+
+        logger.error(f"Database query failed: {e}")
+
+        return "Database error."
+
+
+    if intent == "technical_support":
+
+        return (
             "This seems to be a technical issue. "
-            "Please contact the SmartCampus IT support or your campus help desk for assistance."
-            )
+            "Please contact the SmartCampus IT support or your campus help desk."
+        )
 
-    else:
-        return "I cannot answer that question."
+    return "I cannot answer that question."
