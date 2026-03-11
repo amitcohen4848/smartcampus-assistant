@@ -1,14 +1,36 @@
 import re
+import logging
+from rapidfuzz import process
 from constants_utils.cons_utils import COURSES, WARNING_WORDS
 
-def extract_course(question: str):
+logger = logging.getLogger(__name__)
 
-    question = question.lower()
+def extract_course(text):
 
+    text = text.lower()
+
+    logger.info(f"Extractor input: {text}")
+    logger.info(f"Available courses: {COURSES}")
+
+    # First try fuzzy match
+    match = process.extractOne(text, COURSES, score_cutoff=60)
+
+    if match:
+        logger.info(f"Fuzzy match: {match}")
+        return match[0]
+
+    # Second attempt: keyword search
     for course in COURSES:
-        if course in question:
-            return course
+        words = course.split()
 
+        for w in words:
+            if w in text:
+                if len(w) < 4:
+                    continue
+                logger.info(f"Keyword match: {course}")
+                return course
+
+    logger.info("No course match found")
     return None
 
 

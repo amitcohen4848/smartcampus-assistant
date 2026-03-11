@@ -15,10 +15,16 @@ templates = Jinja2Templates(directory="static/html")
 
 
 @router.get("/ask")
-def ask_page(request: Request, user_id=Depends(require_login)):
+def ask_page(request: Request):
+
+    chat_history = request.session.get("chat_history", [])
+
     return templates.TemplateResponse(
         "ask.html",
-        {"request": request}
+        {
+            "request": request,
+            "chat_history": chat_history
+        }
     )
 
 
@@ -29,12 +35,15 @@ def ask_ai(
     user_id=Depends(require_login)
 ):
 
+    chat_history = request.session.get("chat_history", [])
+
     filtered = data_filter(question)
 
     if not filtered:
         answer = "Invalid question format."
 
     else:
+
         word_count = len(filtered.split())
 
         if word_count < 3:
@@ -58,26 +67,26 @@ def ask_ai(
 
             course = extract_course(filtered)
 
-            # recover intent when user just clarifies course name
-            if intent == "course_name" and course:
-                if previous_intent in {
-                    "course_classroom",
-                    "course_time",
-                    "course_lecturer",
-                    "course_description"
-                }:
-                    intent = previous_intent
+            # if a course is detected but intent is student_courses, assume clarification
+            if course and intent == "student_courses" and previous_intent:
+                intent = previous_intent
 
-            # store corrected intent
-            request.session["last_intent"] = intent
-
+            # loggers
             logger.info(f"Question: {question}")
             logger.info(f"Intent: {intent}")
             logger.info(f"Course extracted: {course}")
 
-            # -----------------------------
-            # Recover course context
-            # -----------------------------
+            # recover intent if user clarifies a course
+            if course and previous_intent in {
+                "course_classroom",
+                "course_time",
+                "course_lecturer",
+                "course_description"
+            }:
+                intent = previous_intent
+
+            request.session["last_intent"] = intent
+
             courses_context = request.session.get("last_courses")
 
             if not course and courses_context:
@@ -86,52 +95,65 @@ def ask_ai(
                     course = courses_context[0]
 
                 elif len(courses_context) > 1:
+
                     options = ", ".join(courses_context)
+
+                    answer = f"You are enrolled in multiple courses: {options}. Which course do you mean?"
+
+                    chat_history.append({
+                        "question": question,
+                        "answer": answer
+                    })
+
+                    request.session["chat_history"] = chat_history
 
                     return templates.TemplateResponse(
                         "ask.html",
                         {
                             "request": request,
-                            "answer": f"You are enrolled in multiple courses: {options}. Which course do you mean?",
-                            "question": question
+                            "chat_history": chat_history
                         }
                     )
 
-            # -----------------------------
-            # Run SQL query
-            # -----------------------------
             result = choose_query(intent, course, user_id)
+            logger.info(f"Query result: {result}")
 
-            # -----------------------------
-            # Store context
-            # -----------------------------
+
             if intent == "student_courses" and result:
                 request.session["last_courses"] = result
 
             elif course:
                 request.session["last_courses"] = [course]
 
-            # -----------------------------
-            # Format result for LLM
-            # -----------------------------
             if isinstance(result, list):
                 result = ", ".join(result) if len(result) > 1 else result[0]
 
-            logger.info(f"Query result: {result}")
-
             answer = llm_answer(question, result, intent)
 
-            # -----------------------------
-            # Store successful Q&A
-            # -----------------------------
+
             if intent != "unknown":
                 save_question(user_id, question, answer)
+
+    # store chat history
+    chat_history.append({
+        "question": question,
+        "answer": answer
+    })
+
+    request.session["chat_history"] = chat_history
 
     return templates.TemplateResponse(
         "ask.html",
         {
             "request": request,
-            "answer": answer,
-            "question": question
+            "chat_history": chat_history
         }
     )
+
+
+@router.post("/clear-chat")
+def clear_chat(request: Request):
+    request.session.pop("chat_history", None)
+    request.session.pop("last_courses", None)
+    request.session.pop("last_intent", None)
+    return {"status": "cleared"}

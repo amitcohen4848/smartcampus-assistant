@@ -1,11 +1,12 @@
 body {
-    font-family: Arial, sans-serif;
-    background: #f5f7fa;
     margin: 0;
+    font-family: Arial, sans-serif;
+    background: #1e1e1e;
+    color: #e5e5e5;
 }
 
 .container {
-    width: 600px;
+    max-width: 700px;
     margin: 40px auto;
 }
 
@@ -13,60 +14,90 @@ h2 {
     text-align: center;
 }
 
+/* chat window */
+
 .chat-box {
-    background: white;
+    background: #2b2b2b;
     border-radius: 10px;
     padding: 20px;
-    height: 400px;
+    height: 450px;
     overflow-y: auto;
-    border: 1px solid #ddd;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
+
+/* messages */
 
 .message {
     margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 75%;
 }
 
-.user {
+.message.user {
+    background: #3b82f6;
+    color: white;
+    margin-left: auto;
     text-align: right;
 }
 
-.user p {
-    display: inline-block;
-    background: #4CAF50;
-    color: white;
-    padding: 10px;
-    border-radius: 10px;
+.message.ai {
+    background: #444;
 }
 
-.ai p {
-    display: inline-block;
-    background: #eee;
-    padding: 10px;
-    border-radius: 10px;
-}
+/* form */
 
 .chat-form {
     display: flex;
+    gap: 10px;
 }
 
 .chat-form input {
     flex: 1;
     padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 8px;
+    border: none;
+    background: #333;
+    color: white;
 }
 
 .chat-form button {
-    padding: 10px 15px;
-    margin-left: 10px;
-    background: #4CAF50;
-    color: white;
+    padding: 10px 14px;
+    border-radius: 8px;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
 }
 
-.chat-form button:hover {
-    background: #45a049;
+/* buttons */
+
+.chat-form button[type="submit"] {
+    background: #3b82f6;
+    color: white;
+}
+
+.chat-form button[type="button"] {
+    background: #555;
+    color: white;
+}
+
+/* scrollbar */
+
+.chat-box::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 4px;
+}
+
+.ai-text::after {
+    content: "|";
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0% { opacity: 1 }
+    50% { opacity: 0 }
+    100% { opacity: 1 }
 }

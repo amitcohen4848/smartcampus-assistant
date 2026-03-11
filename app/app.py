@@ -9,7 +9,6 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
 
 from starlette.middleware.sessions import SessionMiddleware
-from pydantic import BaseModel
 
 from database.db import get_connection
 
@@ -118,12 +117,3 @@ app.include_router(student_router)
 app.include_router(course_router)
 app.include_router(eladcampus_router)
 app.include_router(question_router)
-
-
-# ===============================
-# Future Models
-# ===============================
-
-class Question(BaseModel):
-    question: str
-    age: int
