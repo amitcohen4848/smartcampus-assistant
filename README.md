@@ -29,64 +29,38 @@ The system is composed of several main components:
 ---
 
 ## Project Structure
-## Project Structure
 ```
-SmartCampus_Elad
+smartcampus-assistant
 │
-├── app
-│   ├── dependencies
-│   │   └── dependency.py
-│   │
-│   ├── routes
-│   │   ├── auth.py
-│   │   ├── course_route.py
-│   │   ├── eladcampus.py
-│   │   ├── question_route.py
-│   │   ├── student_route.py
-│   │   └── update_course.py
-│   │
-│   └── app.py
+├── backend
+│ ├── app
+│ │ ├── dependencies
+│ │ ├── routes
+│ │ └── app.py
+│ │
+│ ├── constants_utils
+│ ├── crud
+│ ├── database
+│ ├── evaluation
+│ ├── queries
+│ ├── service
+│ ├── config.py
+│ └── requirements.txt
 │
-├── constants_utils
-│   └── cons_utils.py
+├── frontend
+│ └── static
+│ ├── css
+│ ├── html
+│ └── images
 │
-├── crud
-│   ├── questions_crud.py
-│   ├── update_course_description.py
-│   └── user_crud.py
-│
-├── database
-│   ├── creating_table
-│   │   └── create_tables.py
-│   │
-│   ├── db.py
-│   └── seed.py
-│
-├── evaluation
-│   └── AI_evaluation.py
-│
-├── queries
-│   └── llm_queries.py
-│
-├── service
-│   ├── intents.py
-│   ├── llm_service.py
-│   └── nlp_utils.py
-│
-├── static
-│   ├── css
-│   ├── html
-│   └── images
+├── docs
+│ └── project documentation files
 │
 ├── tests
-│   └── test_llm_service.py
+│ └── test_llm_service.py
 │
-├── config.py
-├── requirements.txt
-├── requirements-dev.txt
-├── smart_campus.sqlite
 ├── classifier_test.csv
-└── .env
+└── README.md
 ```
 
 ---
@@ -94,9 +68,8 @@ SmartCampus_Elad
 ## Installation
 
 Clone the repository:
-git clone <repository-url>
-cd SmartCampus_Elad
-
+git clone https://github.com/amitcohen4848/smartcampus-assistant.git
+cd smartcampus-assistant
 
 Create virtual environment:
 
@@ -124,8 +97,7 @@ pip install -r requirements.txt
 Start the FastAPI server:
 
 
-uvicorn app.app:app --reload
-
+uvicorn backend.app.app:app --reload
 
 Open in browser:
 
